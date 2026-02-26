@@ -281,3 +281,5 @@ plt.gca().set_aspect('equal')
 plt.title("Firma Completa en el Plano Cartesiano")
 plt.grid(True, linestyle=':', alpha=0.5)
 plt.show()
+for xi, yi in zip(x, y_cartesiano):
+    print(f"[{xi}, {yi}]")
