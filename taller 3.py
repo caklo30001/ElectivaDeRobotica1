@@ -41,21 +41,21 @@ plt.show()
 #transferencia de segundo orden y graficar su comportamiento, además se debe mostrar que tipo
 #de sistema es: subamortiguado, criticamente amortiguado y sobreamortiguado.
 
-
 import numpy as np
 import matplotlib.pyplot as plt
 
 K = float(input("Ingrese la ganancia K: "))
-tau = float(input("Ingrese tau (τ) en segundos: "))
+factor_amortiguamiento = float(input("Ingrese el factor de amortiguamiento (ζ): "))
 frecuencia_natural = float(input("Ingrese la frecuencia natural (ωn) en rad/s: "))
 
-if tau <= 0 or frecuencia_natural <= 0:
-    raise ValueError("tau y la frecuencia natural deben ser positivos.")
+# Validaciones (tau todavía no existe, así que se valida lo que sí ingresaste)
+if factor_amortiguamiento <= 0 or frecuencia_natural <= 0:
+    raise ValueError("El factor de amortiguamiento y la frecuencia natural deben ser positivos.")
 
-# Factor de amortiguamiento a partir de tau y frecuencia natural
-factor_amortiguamiento = 1.0 / (tau * frecuencia_natural)
+# Relación usada en tu código
+tau = 1.0 / (factor_amortiguamiento * frecuencia_natural)
 
-# Clasificacion
+# Clasificación
 eps = 1e-9
 if factor_amortiguamiento < 1 - eps:
     tipo = "Subamortiguado"
@@ -66,13 +66,14 @@ else:
 
 print("\nResultados")
 print("Factor de amortiguamiento =", factor_amortiguamiento)
+print("tau =", tau)
 print("Tipo =", tipo)
 
-# Tiempo de simulacion
+# Tiempo de simulación
 t_end = max(10 * tau, 1.0)
 t = np.linspace(0, t_end, 2000)
 
-# Respuesta al escalon unitario y(t)
+# Respuesta al escalón unitario y(t)
 if factor_amortiguamiento < 1 - eps:
     frecuencia_amortiguada = frecuencia_natural * np.sqrt(1 - factor_amortiguamiento**2)
     y = K * (1 - np.exp(-factor_amortiguamiento * frecuencia_natural * t) * (
@@ -91,13 +92,15 @@ else:
         (factor_amortiguamiento - a) * np.exp(-(factor_amortiguamiento + a) * frecuencia_natural * t)
     ))
 
-
 plt.plot(t, y)
 plt.xlabel("Tiempo (s)")
 plt.ylabel("Salida y(t)")
-plt.title(f"Funcion de transferencia(K={K}, tau={tau}, frecuencia_natural={frecuencia_natural})\n{tipo} (ζ={factor_amortiguamiento:.4f})")
+plt.title(
+    f"Respuesta al escalon (K={K}, tau={tau:.4f}, ωn={frecuencia_natural})\n"
+    f"{tipo} (ζ={factor_amortiguamiento:.4f})"
+)
 plt.grid(True)
-plt.show()1
+plt.show()
 
 #3. Implemente la ecuación de carga y descarga para un circuito RC. El usuario ingresa por teclado el
 #valor de voltaje (V), capacitancia (𝜇𝐹) y resistencia (Ω).  Posteriormente realice en Python la
